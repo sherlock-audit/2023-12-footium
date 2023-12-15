@@ -17,10 +17,7 @@ in each testnet beta.
 ### Our contracts
 
 The Footium smart contracts track Player and Club NFT's, the Footium Token
-token, and handle prize distribution. Here's a rough diagram of our smart
-contracts and (mostly) how they interact:
-
-![Smart_contract_diagram](./diagram-1.png)
+token, and handle prize distribution.
 
 Footium has 7 smart contracts.
 
@@ -44,9 +41,7 @@ On a high level, the `footium-node` indexer, frontend, and blockchain in all
 interact in cyclical fashion. Events emitted by the blockchain are indexed by
 the API. This in turns updates the information displayed on the frontend.
 Finally, users act on this information and execute blockchain transactions,
-mediated via the frontend. Here's an overcomplicated diagram:
-
-![image](./diagram-2.png)
+mediated via the frontend.
 
 ### Scripts
 
