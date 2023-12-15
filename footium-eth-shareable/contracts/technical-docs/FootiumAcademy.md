@@ -38,21 +38,18 @@ owner of the contract.
 This function pauses the contract. This function can only be executed by the
 owner of the contract.
 
-### `mintPlayers(SeasonID seasonId, uint256 clubId, uint256 divId, uint256[] calldata generationIds, bytes32[] calldata divProof) external payable whenNotPaused nonReentrant`
+### `mintPlayers(uint256 clubId, string calldata playerId, bytes32[] calldata mintProof) external payable whenNotPaused nonReentrant`
 
 This function mints players for a club based on certain rules. A club owner can
 only mint players for their club. Only certain player IDs can be minted, and a
 player ID cannot be minted twice. The function parameters are as follows:
 
--   `seasonId`: The season cohort to mint players from. Academy players can no
-    longer be minted beyond their 3rd season.
 -   `clubId`: The ID of the club to be minting an academy player for. The caller
     of this function must own the club with this ID.
--   `divId`: The ID of the division that the club belongs to.
--   `generationIds`: The unique identifier of each player within the season cohort.
--   `divProof`: Sibling hashes on the branch from the leaf to the division root of
-    the merkel tree. This proves that the `clubId` belongs to division with
-    `divId`. This makes sure that the fee being charged is correct.
+-   `playerId`: The playerId to be minted.
+-   `mintProof`: Sibling hashes on the branch from the leaf to the division root of
+    the merkel tree. This proves that the `clubId` can mint the player with
+    `playerId` for the passed in value. This makes sure that the fee being charged is correct.
 
 ### `withdraw() external onlyOwner`
 
