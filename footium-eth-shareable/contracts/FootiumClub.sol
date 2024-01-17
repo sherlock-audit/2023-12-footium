@@ -6,6 +6,7 @@ import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/acce
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import {ERC2981Upgradeable} from "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol";
 
 /**
  * @title Footium Football Club
@@ -14,6 +15,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 contract FootiumClub is
     ERC721Upgradeable,
     AccessControlUpgradeable,
+    ERC2981Upgradeable,
     PausableUpgradeable,
     ReentrancyGuardUpgradeable,
     OwnableUpgradeable
@@ -25,18 +27,26 @@ contract FootiumClub is
     string private _base;
 
     /**
-     * @dev Initializes the FootiumClub contract.
-     * @param baseURI Footium Club  token base metadata URI.
+     * @notice Initializes the Footium Club contract.
+     * @param _receiver The royalty receiver address.
+     * @param _royaltyFeePercentage The royalty fee percentage (f.e. 500 means 5%).
+     * @param baseURI Token base metadata URI.
      */
-    function initialize(string memory baseURI) external initializer {
+    function initialize(
+        address _receiver,
+        uint96 _royaltyFeePercentage,
+        string memory baseURI
+    ) external initializer {
         __ERC721_init("FootiumClub", "FFC");
         __AccessControl_init();
+        __ERC2981_init();
         __Pausable_init();
         __ReentrancyGuard_init();
         __Ownable_init();
 
         _base = baseURI;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setDefaultRoyalty(_receiver, _royaltyFeePercentage);
     }
 
     /** @notice Mints a Footium football club
@@ -60,6 +70,19 @@ contract FootiumClub is
      */
     function setBaseURI(string calldata baseURI) public onlyOwner {
         _base = baseURI;
+    }
+
+    /**
+     * @notice Updates the royalty information.
+     * @param _receiver The royalty receiver address.
+     * @param _royaltyFeePercentage The royalty fee percentage (f.e. 500 means 5%).
+     * @dev Only owner address allowed.
+     */
+    function setRoyaltyInfo(address _receiver, uint96 _royaltyFeePercentage)
+        external
+        onlyOwner
+    {
+        _setDefaultRoyalty(_receiver, _royaltyFeePercentage);
     }
 
     /**
@@ -88,7 +111,11 @@ contract FootiumClub is
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721Upgradeable, AccessControlUpgradeable)
+        override(
+            ERC721Upgradeable,
+            AccessControlUpgradeable,
+            ERC2981Upgradeable
+        )
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

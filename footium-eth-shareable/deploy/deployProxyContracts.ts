@@ -31,6 +31,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     console.log("FootiumToken is successfully deployed");
 
     const ClubContract = await deployProxyAndArtifact(hre)("FootiumClub", [
+        PrizeDistributor.address,
+        ROYALTY_FEE_PERCENTAGE,
         CLUB_URI
     ]);
 
